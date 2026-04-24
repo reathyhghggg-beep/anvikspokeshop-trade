@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anvik's PokeShop & Trade</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">⚡ Anvik's PokeShop & Trade</div>
+            <ul class="nav-links">
+                <li><a href="#cards">Cards</a></li>
+                <li><a href="#schedule">Schedule Meeting</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Anvik's PokeShop & Trade</h1>
+            <p>Buy or Trade Your Favorite Pokémon Cards</p>
+        </div>
+    </section>
+
+    <section id="cards" class="cards-section">
+        <h2>My Pokémon Cards Collection</h2>
+        <div class="cards-grid" id="cardsGrid"></div>
+    </section>
+
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-body">
+                <img id="modalCardImage" src="" alt="Pokemon Card" class="modal-card-image">
+                <div class="modal-info">
+                    <h2 id="modalCardTitle"></h2>
+                    <p class="interested-text">Interested?</p>
+
+                    <div class="button-group">
+                        <button class="btn btn-trade" id="tradeBtn">Trade</button>
+                        <button class="btn btn-buy" id="buyBtn">Buy</button>
+                    </div>
+
+                    <div id="tradeForm" class="hidden">
+                        <h3>What Pokémon cards do you have to trade?</h3>
+                        <textarea id="tradeInput" rows="5"></textarea>
+                        <button class="btn btn-submit" id="tradeSubmit">Submit Trade Offer</button>
+                    </div>
+
+                    <div id="buyForm" class="hidden">
+                        <h3>How much are you willing to pay?</h3>
+                        <input type="number" id="buyInput">
+                        <button class="btn btn-submit" id="buySubmit">Submit Offer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="schedule" class="schedule-section">
+        <h2>Schedule a Meeting</h2>
+        <form id="scheduleForm">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Email" required>
+            <input type="datetime-local" required>
+            <textarea placeholder="Notes"></textarea>
+            <button type="submit">Schedule Meeting</button>
+        </form>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2026 Anvik's PokeShop & Trade. All rights reserved.</p>
+        <p>(Contact reathyhghggg@gmail.com on Google Chat for extra information)</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
