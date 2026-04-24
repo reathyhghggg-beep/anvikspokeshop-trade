@@ -1,282 +1,127 @@
-// =============================
-// POKEMON CARDS DATA (TCGPLAYER)
-// =============================
-
 const pokemonCards = [
-    {
-        id: 1,
-        title: "Eevee V (Eevee Stamp)",
-        set: "SWSH065",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/246708.jpg",
-        price: "$12.45 NM"
-    },
-    {
-        id: 2,
-        title: "Lycanroc V",
-        set: "081/203",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/223073.jpg",
-        price: "$2.89 NM"
-    },
-    {
-        id: 3,
-        title: "Lugia V",
-        set: "SWSH301",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/284137.jpg",
-        price: "$18.74 NM"
-    },
-    {
-        id: 4,
-        title: "Sylveon V",
-        set: "TG14/TG30",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/253281.jpg",
-        price: "$21.11 NM"
-    },
-    {
-        id: 5,
-        title: "Pinsir",
-        set: "168/167",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/542863.jpg",
-        price: "$6.32 NM"
-    },
-    {
-        id: 6,
-        title: "Medicham EX",
-        set: "095/107",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/88808.jpg",
-        price: "$7.20 NM"
-    },
-    {
-        id: 7,
-        title: "Zapdos EX",
-        set: "192/165",
-        image: "https://product-images.tcgplayer.com/fit-in/656x656/497617.jpg",
-        price: "$39.56 NM"
-    }
+    {id:1,title:"Eevee V (Eevee Stamp)",set:"SWSH065",image:"https://placehold.co/300x410?text=Eevee+V"},
+    {id:2,title:"Lycanroc V",set:"081/203",image:"https://placehold.co/300x410?text=Lycanroc+V"},
+    {id:3,title:"Lugia V",set:"SWSH301",image:"https://placehold.co/300x410?text=Lugia+V"},
+    {id:4,title:"Sylveon V",set:"SWSH202",image:"https://placehold.co/300x410?text=Sylveon+V"},
+    {id:5,title:"Pinsir",set:"168/167",image:"https://placehold.co/300x410?text=Pinsir"},
+    {id:6,title:"Medicham EX",set:"054/102",image:"https://placehold.co/300x410?text=Medicham+EX"},
+    {id:7,title:"Zapdos EX",set:"192/165",image:"https://placehold.co/300x410?text=Zapdos+EX"}
 ];
 
-// =============================
-// INIT
-// =============================
+let filteredCards = [...pokemonCards];
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     loadCards();
     setupModal();
-    setupScheduleForm();
+    setupSearch();
     setupAdmin();
 });
 
-// =============================
-// LOAD CARDS
-// =============================
+/* CARDS */
+function loadCards(list = filteredCards) {
+    const grid = document.getElementById("cardsGrid");
+    grid.innerHTML = "";
 
-function loadCards() {
-    const cardsGrid = document.getElementById("cardsGrid");
-    if (!cardsGrid) return;
+    list.forEach(card => {
+        const div = document.createElement("div");
+        div.className = "card";
 
-    cardsGrid.innerHTML = "";
-
-    pokemonCards.forEach(card => {
-        const cardElement = document.createElement("div");
-        cardElement.className = "card";
-
-        cardElement.innerHTML = `
-            <img src="${card.image}" alt="${card.title}" class="card-image">
-
+        div.innerHTML = `
+            <img src="${card.image}">
             <h3>${card.title}</h3>
-
-            <p class="card-set">${card.set}</p>
-
-            <p class="card-price">${card.price}</p>
+            <p>${card.set}</p>
         `;
 
-        cardElement.onclick = () => openModal(card);
-
-        cardsGrid.appendChild(cardElement);
+        div.onclick = () => openModal(card);
+        grid.appendChild(div);
     });
 }
 
-// =============================
-// MODAL SYSTEM
-// =============================
+/* SEARCH */
+function setupSearch() {
+    document.getElementById("searchBar").addEventListener("input", (e) => {
+        const value = e.target.value.toLowerCase();
 
+        filteredCards = pokemonCards.filter(card =>
+            card.title.toLowerCase().includes(value)
+        );
+
+        loadCards(filteredCards);
+    });
+}
+
+/* MODAL */
 function setupModal() {
-    const modal = document.getElementById("cardModal");
-
     document.querySelector(".close").onclick = closeModal;
 
-    document.getElementById("tradeBtn").onclick = showTradeForm;
-    document.getElementById("buyBtn").onclick = showBuyForm;
+    document.getElementById("tradeBtn").onclick = () => {
+        tradeForm.classList.remove("hidden");
+        buyForm.classList.add("hidden");
+    };
+
+    document.getElementById("buyBtn").onclick = () => {
+        buyForm.classList.remove("hidden");
+        tradeForm.classList.add("hidden");
+    };
 
     document.getElementById("tradeSubmit").onclick = submitTrade;
     document.getElementById("buySubmit").onclick = submitBuy;
-
-    window.onclick = function (event) {
-        if (event.target === modal) {
-            closeModal();
-        }
-    };
 }
 
 function openModal(card) {
-    document.getElementById("modalCardImage").src = card.image;
-    document.getElementById("modalCardTitle").textContent =
-        `${card.title} (${card.set})`;
-
-    document.getElementById("tradeForm").classList.add("hidden");
-    document.getElementById("buyForm").classList.add("hidden");
-
-    document.getElementById("tradeInput").value = "";
-    document.getElementById("buyInput").value = "";
-
     document.getElementById("cardModal").style.display = "block";
+    modalCardImage.src = card.image;
+    modalCardTitle.innerText = card.title;
 }
 
 function closeModal() {
     document.getElementById("cardModal").style.display = "none";
 }
 
-function showTradeForm() {
-    document.getElementById("tradeForm").classList.remove("hidden");
-    document.getElementById("buyForm").classList.add("hidden");
-}
-
-function showBuyForm() {
-    document.getElementById("buyForm").classList.remove("hidden");
-    document.getElementById("tradeForm").classList.add("hidden");
-}
-
-// =============================
-// TRADE REQUESTS
-// =============================
-
+/* TRADE */
 function submitTrade() {
-    const tradeText = document.getElementById("tradeInput").value;
+    const value = tradeInput.value;
 
-    if (!tradeText.trim()) {
-        alert("Please enter your trade cards");
-        return;
-    }
+    let data = JSON.parse(localStorage.getItem("trades") || "[]");
+    data.push(value);
 
-    const trades =
-        JSON.parse(localStorage.getItem("tradeRequests")) || [];
+    localStorage.setItem("trades", JSON.stringify(data));
 
-    trades.push({
-        message: tradeText,
-        date: new Date().toLocaleString()
-    });
-
-    localStorage.setItem("tradeRequests", JSON.stringify(trades));
-
-    alert("Trade request submitted!");
-    closeModal();
+    alert("Trade submitted!");
 }
 
-// =============================
-// BUY REQUESTS
-// =============================
-
+/* BUY */
 function submitBuy() {
-    const price = document.getElementById("buyInput").value;
+    const value = buyInput.value;
 
-    if (!price || price <= 0) {
-        alert("Enter a valid price");
-        return;
-    }
+    let data = JSON.parse(localStorage.getItem("buys") || "[]");
+    data.push(value);
 
-    const buys =
-        JSON.parse(localStorage.getItem("buyRequests")) || [];
+    localStorage.setItem("buys", JSON.stringify(data));
 
-    buys.push({
-        amount: "$" + price,
-        date: new Date().toLocaleString()
-    });
-
-    localStorage.setItem("buyRequests", JSON.stringify(buys));
-
-    alert("Buy offer submitted!");
-    closeModal();
+    alert("Offer submitted!");
 }
 
-// =============================
-// SCHEDULE FORM
-// =============================
-
-function setupScheduleForm() {
-    const form = document.getElementById("scheduleForm");
-
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        alert("Meeting Scheduled!");
-        form.reset();
-    });
-}
-
-// =============================
-// ADMIN PANEL
-// =============================
-
+/* ADMIN */
 function setupAdmin() {
-    const loginBtn = document.getElementById("adminLoginBtn");
+    adminLoginBtn.onclick = () => {
+        if (adminPassword.value === "974955isverycool21") {
+            adminPanel.classList.remove("hidden");
 
-    loginBtn.addEventListener("click", () => {
-        const password =
-            document.getElementById("adminPassword").value;
+            const trades = JSON.parse(localStorage.getItem("trades") || "[]");
+            const buys = JSON.parse(localStorage.getItem("buys") || "[]");
 
-        if (password === "974955isverycool21") {
-            document.getElementById("adminPanel")
-                .classList.remove("hidden");
+            requestsList.innerHTML = "";
 
-            loadRequests();
+            trades.forEach(t =>
+                requestsList.innerHTML += `<div class="card">TRADE: ${t}</div>`
+            );
 
-            alert("Access Granted");
+            buys.forEach(b =>
+                requestsList.innerHTML += `<div class="card">BUY: ${b}</div>`
+            );
         } else {
-            alert("Incorrect Password");
+            alert("Wrong password");
         }
-    });
-}
-
-// =============================
-// LOAD REQUESTS (ADMIN VIEW)
-// =============================
-
-function loadRequests() {
-    const requestsList =
-        document.getElementById("requestsList");
-
-    if (!requestsList) return;
-
-    const trades =
-        JSON.parse(localStorage.getItem("tradeRequests")) || [];
-
-    const buys =
-        JSON.parse(localStorage.getItem("buyRequests")) || [];
-
-    requestsList.innerHTML = "";
-
-    trades.forEach(trade => {
-        const div = document.createElement("div");
-        div.className = "request-card";
-
-        div.innerHTML = `
-            <h3>Trade Request</h3>
-            <p>${trade.message}</p>
-            <small>${trade.date}</small>
-        `;
-
-        requestsList.appendChild(div);
-    });
-
-    buys.forEach(buy => {
-        const div = document.createElement("div");
-        div.className = "request-card";
-
-        div.innerHTML = `
-            <h3>Buy Offer</h3>
-            <p>${buy.amount}</p>
-            <small>${buy.date}</small>
-        `;
-
-        requestsList.appendChild(div);
-    });
+    };
 }
