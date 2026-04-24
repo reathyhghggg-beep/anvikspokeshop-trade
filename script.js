@@ -1,186 +1,282 @@
-// Pokemon Cards Data (FIXED IMAGE DISPLAY)
+// =============================
+// POKEMON CARDS DATA (TCGPLAYER)
+// =============================
+
 const pokemonCards = [
     {
         id: 1,
         title: "Eevee V (Eevee Stamp)",
         set: "SWSH065",
-        image: "https://placehold.co/300x410/png?text=Eevee+V"
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/246708.jpg",
+        price: "$12.45 NM"
     },
     {
         id: 2,
         title: "Lycanroc V",
         set: "081/203",
-        image: "https://placehold.co/300x410/png?text=Lycanroc+V"
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/223073.jpg",
+        price: "$2.89 NM"
     },
     {
         id: 3,
         title: "Lugia V",
         set: "SWSH301",
-        image: "https://placehold.co/300x410/png?text=Lugia+V"
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/284137.jpg",
+        price: "$18.74 NM"
     },
     {
         id: 4,
         title: "Sylveon V",
-        set: "SWSH202",
-        image: "https://placehold.co/300x410/png?text=Sylveon+V"
+        set: "TG14/TG30",
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/253281.jpg",
+        price: "$21.11 NM"
     },
     {
         id: 5,
         title: "Pinsir",
         set: "168/167",
-        image: "https://placehold.co/300x410/png?text=Pinsir"
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/542863.jpg",
+        price: "$6.32 NM"
     },
     {
         id: 6,
-        title: "Medicham EX (Japanese)",
-        set: "054/102",
-        image: "https://placehold.co/300x410/png?text=Medicham+EX"
+        title: "Medicham EX",
+        set: "095/107",
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/88808.jpg",
+        price: "$7.20 NM"
     },
     {
         id: 7,
         title: "Zapdos EX",
         set: "192/165",
-        image: "https://placehold.co/300x410/png?text=Zapdos+EX"
+        image: "https://product-images.tcgplayer.com/fit-in/656x656/497617.jpg",
+        price: "$39.56 NM"
     }
 ];
 
-// Initialize page
-document.addEventListener('DOMContentLoaded', function() {
-    increaseTextSize(); // 👈 NEW
+// =============================
+// INIT
+// =============================
+
+document.addEventListener("DOMContentLoaded", function () {
     loadCards();
     setupModal();
     setupScheduleForm();
+    setupAdmin();
 });
 
-// 🔥 MAKE TEXT BIGGER
-function increaseTextSize() {
-    const style = document.createElement('style');
-    style.innerHTML = `
-        body {
-            font-size: 18px;
-        }
-        h1 {
-            font-size: 3rem;
-        }
-        h2 {
-            font-size: 2.2rem;
-        }
-        h3 {
-            font-size: 1.6rem;
-        }
-        p, a, button, input {
-            font-size: 1.1rem;
-        }
-        .card-set {
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-    `;
-    document.head.appendChild(style);
-}
+// =============================
+// LOAD CARDS
+// =============================
 
-// Load cards into grid
 function loadCards() {
-    const cardsGrid = document.getElementById('cardsGrid');
+    const cardsGrid = document.getElementById("cardsGrid");
     if (!cardsGrid) return;
 
-    cardsGrid.innerHTML = '';
+    cardsGrid.innerHTML = "";
 
     pokemonCards.forEach(card => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card';
+        const cardElement = document.createElement("div");
+        cardElement.className = "card";
 
         cardElement.innerHTML = `
-            <img src="${card.image}" alt="${card.title}" class="card-image"
-                onerror="this.src='https://placehold.co/300x410?text=Card+Image'">
+            <img src="${card.image}" alt="${card.title}" class="card-image">
+
             <h3>${card.title}</h3>
+
             <p class="card-set">${card.set}</p>
+
+            <p class="card-price">${card.price}</p>
         `;
 
         cardElement.onclick = () => openModal(card);
+
         cardsGrid.appendChild(cardElement);
     });
 }
 
-// Modal Functions (unchanged but safer)
+// =============================
+// MODAL SYSTEM
+// =============================
+
 function setupModal() {
-    const modal = document.getElementById('cardModal');
-    const closeBtn = document.querySelector('.close');
-    const tradeBtn = document.getElementById('tradeBtn');
-    const buyBtn = document.getElementById('buyBtn');
-    const tradeSubmit = document.getElementById('tradeSubmit');
-    const buySubmit = document.getElementById('buySubmit');
+    const modal = document.getElementById("cardModal");
 
-    closeBtn && (closeBtn.onclick = closeModal);
-    tradeBtn && (tradeBtn.onclick = showTradeForm);
-    buyBtn && (buyBtn.onclick = showBuyForm);
-    tradeSubmit && (tradeSubmit.onclick = submitTrade);
-    buySubmit && (buySubmit.onclick = submitBuy);
+    document.querySelector(".close").onclick = closeModal;
 
-    window.onclick = (event) => {
-        if (event.target == modal) closeModal();
+    document.getElementById("tradeBtn").onclick = showTradeForm;
+    document.getElementById("buyBtn").onclick = showBuyForm;
+
+    document.getElementById("tradeSubmit").onclick = submitTrade;
+    document.getElementById("buySubmit").onclick = submitBuy;
+
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
     };
 }
 
 function openModal(card) {
-    const modal = document.getElementById('cardModal');
-
-    document.getElementById('modalCardImage').src = card.image;
-    document.getElementById('modalCardTitle').textContent =
+    document.getElementById("modalCardImage").src = card.image;
+    document.getElementById("modalCardTitle").textContent =
         `${card.title} (${card.set})`;
 
-    document.getElementById('tradeForm')?.classList.add('hidden');
-    document.getElementById('buyForm')?.classList.add('hidden');
+    document.getElementById("tradeForm").classList.add("hidden");
+    document.getElementById("buyForm").classList.add("hidden");
 
-    document.getElementById('tradeInput').value = '';
-    document.getElementById('buyInput').value = '';
+    document.getElementById("tradeInput").value = "";
+    document.getElementById("buyInput").value = "";
 
-    modal.style.display = 'block';
+    document.getElementById("cardModal").style.display = "block";
 }
 
 function closeModal() {
-    document.getElementById('cardModal').style.display = 'none';
+    document.getElementById("cardModal").style.display = "none";
 }
 
 function showTradeForm() {
-    document.getElementById('tradeForm').classList.remove('hidden');
-    document.getElementById('buyForm').classList.add('hidden');
+    document.getElementById("tradeForm").classList.remove("hidden");
+    document.getElementById("buyForm").classList.add("hidden");
 }
 
 function showBuyForm() {
-    document.getElementById('buyForm').classList.remove('hidden');
-    document.getElementById('tradeForm').classList.add('hidden');
+    document.getElementById("buyForm").classList.remove("hidden");
+    document.getElementById("tradeForm").classList.add("hidden");
 }
+
+// =============================
+// TRADE REQUESTS
+// =============================
 
 function submitTrade() {
-    const tradeText = document.getElementById('tradeInput').value;
+    const tradeText = document.getElementById("tradeInput").value;
+
     if (!tradeText.trim()) {
-        alert('Please enter your Pokemon cards for trade');
+        alert("Please enter your trade cards");
         return;
     }
-    alert(`Trade submitted!\n\nYour cards: ${tradeText}`);
+
+    const trades =
+        JSON.parse(localStorage.getItem("tradeRequests")) || [];
+
+    trades.push({
+        message: tradeText,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("tradeRequests", JSON.stringify(trades));
+
+    alert("Trade request submitted!");
     closeModal();
 }
+
+// =============================
+// BUY REQUESTS
+// =============================
 
 function submitBuy() {
-    const price = document.getElementById('buyInput').value;
+    const price = document.getElementById("buyInput").value;
+
     if (!price || price <= 0) {
-        alert('Enter a valid price');
+        alert("Enter a valid price");
         return;
     }
-    alert(`Buy offer: $${price}`);
+
+    const buys =
+        JSON.parse(localStorage.getItem("buyRequests")) || [];
+
+    buys.push({
+        amount: "$" + price,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("buyRequests", JSON.stringify(buys));
+
+    alert("Buy offer submitted!");
     closeModal();
 }
 
-// Schedule form
-function setupScheduleForm() {
-    const form = document.getElementById('scheduleForm');
-    if (!form) return;
+// =============================
+// SCHEDULE FORM
+// =============================
 
-    form.addEventListener('submit', function(e) {
+function setupScheduleForm() {
+    const form = document.getElementById("scheduleForm");
+
+    form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        alert('Meeting scheduled!');
+        alert("Meeting Scheduled!");
         form.reset();
+    });
+}
+
+// =============================
+// ADMIN PANEL
+// =============================
+
+function setupAdmin() {
+    const loginBtn = document.getElementById("adminLoginBtn");
+
+    loginBtn.addEventListener("click", () => {
+        const password =
+            document.getElementById("adminPassword").value;
+
+        if (password === "974955isverycool21") {
+            document.getElementById("adminPanel")
+                .classList.remove("hidden");
+
+            loadRequests();
+
+            alert("Access Granted");
+        } else {
+            alert("Incorrect Password");
+        }
+    });
+}
+
+// =============================
+// LOAD REQUESTS (ADMIN VIEW)
+// =============================
+
+function loadRequests() {
+    const requestsList =
+        document.getElementById("requestsList");
+
+    if (!requestsList) return;
+
+    const trades =
+        JSON.parse(localStorage.getItem("tradeRequests")) || [];
+
+    const buys =
+        JSON.parse(localStorage.getItem("buyRequests")) || [];
+
+    requestsList.innerHTML = "";
+
+    trades.forEach(trade => {
+        const div = document.createElement("div");
+        div.className = "request-card";
+
+        div.innerHTML = `
+            <h3>Trade Request</h3>
+            <p>${trade.message}</p>
+            <small>${trade.date}</small>
+        `;
+
+        requestsList.appendChild(div);
+    });
+
+    buys.forEach(buy => {
+        const div = document.createElement("div");
+        div.className = "request-card";
+
+        div.innerHTML = `
+            <h3>Buy Offer</h3>
+            <p>${buy.amount}</p>
+            <small>${buy.date}</small>
+        `;
+
+        requestsList.appendChild(div);
     });
 }
