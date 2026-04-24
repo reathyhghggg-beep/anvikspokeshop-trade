@@ -1,0 +1,2 @@
+# anvikspokeshop-trade
+PokeShop
